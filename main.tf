@@ -1,19 +1,19 @@
 provider "aws" {
-region = "eu-west-1"
+region = "eu-south-1"
 }
 
 resource "aws_instance" "one" {
-  ami             = "ami-0a094c309b87cc107"
+  ami             = "ami-023a307f3d27ea427"
   instance_type   = "t2.micro"
-  key_name        = "serverwest"
-  vpc_security_group_ids = [aws_security_group.five.id]
-  availability_zone = "eu-west-1a"
+  key_name        = "newkey"
+  vpc_security_group_ids = [aws_security_group.three.id]
+  availability_zone = "ap-south-1a"
   user_data       = <<EOF
 #!/bin/bash
 sudo -i
-yum install httpd -y
-systemctl start httpd
-chkconfig httpd on
+apt install apache2 -y
+systemctl start apache2
+chkconfig apache2 on
 echo "hai all this is my app created by terraform infrastructurte by Mohit on server-1" > /var/www/html/index.html
 EOF
   tags = {
@@ -22,11 +22,11 @@ EOF
 }
 
 resource "aws_instance" "two" {
-  ami             = "ami-0a094c309b87cc107"
+  ami             = "ami-05c179eced2eb9b5b"
   instance_type   = "t2.micro"
-  key_name        = "serverwest"
-  vpc_security_group_ids = [aws_security_group.five.id]
-  availability_zone = "eu-west-1b"
+  key_name        = "newkey"
+  vpc_security_group_ids = [aws_security_group.three.id]
+  availability_zone = "ap-south-1b"
   user_data       = <<EOF
 #!/bin/bash
 sudo -i
@@ -40,29 +40,7 @@ EOF
   }
 }
 
-resource "aws_instance" "three" {
-  ami             = "ami-0a094c309b87cc107"
-  instance_type   = "t2.micro"
-  key_name        = "serverwest"
-  vpc_security_group_ids = [aws_security_group.five.id]
-  availability_zone = "eu-west-1a"
-  tags = {
-    Name = "app-server-1"
-  }
-}
-
-resource "aws_instance" "four" {
-  ami             = "ami-0a094c309b87cc107"
-  instance_type   = "t2.micro"
-  key_name        = "serverwest"
-  vpc_security_group_ids = [aws_security_group.five.id]
-  availability_zone = "eu-west-1b"
-  tags = {
-    Name = "app-server-2"
-  }
-}
-
-resource "aws_security_group" "five" {
+resource "aws_security_group" "three" {
   name = "elb-sg"
   ingress {
     from_port   = 22
@@ -86,11 +64,11 @@ resource "aws_security_group" "five" {
   }
 }
 
-resource "aws_s3_bucket" "six" {
-  bucket = "mohitdemoprojectofterraform-integration-1271"
+resource "aws_s3_bucket" "four" {
+  bucket = "mohitdemoterraform-integration-101"
 }
 
-resource "aws_iam_user" "seven" {
+resource "aws_iam_user" "five" {
 for_each = var.user_names
 name = each.value
 }
@@ -98,11 +76,11 @@ name = each.value
 variable "user_names" {
 description = "*"
 type = set(string)
-default = ["mohit1", "rohit1"]
+default = ["mohit", "rohit"]
 }
 
-resource "aws_ebs_volume" "eight" {
- availability_zone = "eu-west-1a"
+resource "aws_ebs_volume" "six" {
+ availability_zone = "ap-south-1a"
   size = 10
   tags = {
     Name = "terraform1-001"
